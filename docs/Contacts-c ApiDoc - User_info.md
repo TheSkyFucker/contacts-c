@@ -99,25 +99,11 @@
 | 属性名          | 必要性 | 最小长度 | 最大长度 | 特殊要求
 | --------------- | ------ | -------- | -------- | --------
 | **Uuserid**     | O      | 1        | 20       | -    
-| **Uusername**   | O      | 1        | 20       | - 
-| **Uaddress**    | X      | -        | 20       | -
-| **Uuserphone**  | O      | 1        | 20       | -
-| **Uuserwechat** | X      | 1        | 20       | -
-| **Uuseremail**  | X      | 1        | 20       | -
-| **Uuserqq**     | X      | 1        | 20       | -
-| **Uuserlang**   | X      | 1        | 20       | -
 
 - **示例**
 ```
 {
-	"Uuserid": "031502443",
-	"Uusername": "zsh",
-	"Uaddress": "Fuzhou",
-	"Uuserphone": "130557700000",
-	"Uuserwechat": "shuhao",
-	"Uuseremail": "shuhao@gmail.com",
-	"Uuserqq": "10086",
-	"Uuserlang": "Wow!"
+	"Uuserid": "031502443"
 }
 ```
 
@@ -133,14 +119,13 @@
 
 ---
 
-## **接口 · 修改文章**
+## **接口 · 修改信息**
 - **请求方法：POST**
 - **接口网址：http://contacts-c.and-who.cn/User_info/update**
 - **表单要求**
 
 | 属性名          | 必要性 | 最小长度 | 最大长度 | 特殊要求
-| --------------- | ------ | -------- | -------- | --------
-| **Uuserid**     | O      | 1        | 20       | -    
+| --------------- | ------ | -------- | -------- | --------  
 | **Uusername**   | O      | 1        | 20       | - 
 | **Uaddress**    | X      | -        | 20       | -
 | **Uuserphone**  | O      | 1        | 20       | -
@@ -153,7 +138,6 @@
 - **示例**
 ```
 {
-	"Uuserid": "031502443",
 	"Uusername": "zsh",
 	"Uaddress": "Fuzhou",
 	"Uuserphone": "130557700000",
