@@ -13,6 +13,7 @@ class User_info extends CI_Controller {
 	 */
 	public function get()
 	{
+
 		//config
 		$members = array('Utoken', 'Uuserid');
 
@@ -35,6 +36,7 @@ class User_info extends CI_Controller {
 
 		//return
 		output_data(1, '获取成功', $data);
+
 	}
 
 
@@ -43,6 +45,7 @@ class User_info extends CI_Controller {
 	 */
 	public function delete()
 	{	
+
 		//config
 		$members = array('Utoken', 'Uuserid');
 
@@ -65,6 +68,7 @@ class User_info extends CI_Controller {
 
 		//return
 		output_data(1, '删除成功', array());
+
 	}
 
 
@@ -73,6 +77,7 @@ class User_info extends CI_Controller {
 	 */
 	public function register()
 	{
+
 		//config
 		$members = array('Utoken', 'Uuserid');
 
@@ -111,6 +116,7 @@ class User_info extends CI_Controller {
 
 		//return
 		output_data(1, "增加成功", array());
+
 	}
 
 
@@ -119,8 +125,9 @@ class User_info extends CI_Controller {
  	 */
  	public function update()
  	{
+
  		//config
- 		$members = array( 'Utoken', 'Uuserid','Uusername', 'Uadress', 'Uuserphone', 'Uuserwechat', 'Uuseremail', 'Uuserqq', 'Uuserlang');
+ 		$members = array('Utoken', 'Uuserid','Uusername', 'Uadress', 'Uuserphone', 'Uuserwechat', 'Uuseremail', 'Uuserqq', 'Uuserlang');
  
  		//update
 		try
@@ -159,6 +166,7 @@ class User_info extends CI_Controller {
 
 		//return
 		output_data(1, '修改成功', array());
+
 	}
 
 
@@ -167,6 +175,7 @@ class User_info extends CI_Controller {
 	 */
 	public function get_list()
 	{
+		
 		//config
 		$members = array('Utoken', 'Uuserid', 'page_size', 'page', 'orderby');
 

@@ -7,6 +7,7 @@ class User_info_model extends CI_Model {
 	 */
 	public function get($form)
 	{
+
 		//check token
 		$this->load->model('User_model', 'user');
 		$this->user->check_token($form['Utoken']);
@@ -22,6 +23,7 @@ class User_info_model extends CI_Model {
 
 		//return
 		return $result;
+
 	}
 
 
@@ -30,6 +32,7 @@ class User_info_model extends CI_Model {
 	 */
 	public function delete($form)
 	{
+
 		//check token
 		$this->load->model('User_model', 'user');
 		$this->user->check_token($form['Utoken']);
@@ -53,6 +56,7 @@ class User_info_model extends CI_Model {
 		//DO delete
 		$where = array('Uuserid' => $form['Uuserid']);
 		$this->db->delete('user_rela', $where);
+
 	}
 
 
@@ -109,6 +113,7 @@ class User_info_model extends CI_Model {
 	 */
 	public function update($form)
 	{
+
 		//check token
 		$this->load->model('User_model', 'user');
 		$this->user->check_token($form['Utoken']);
@@ -131,6 +136,7 @@ class User_info_model extends CI_Model {
 		//update
 		$where = array('Uuserid' => $form['Uuserid']);
 		$this->db->update('user_info', filter($form, $members), $where);
+		
 	}
 
 

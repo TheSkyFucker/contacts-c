@@ -121,7 +121,7 @@
 
 ## **接口 · 修改用户个人信息**
 - **请求方法：POST**
-- **接口网址：http://contacts-c.and-who.cn/User_info/update**
+- **接口网址：http://contacts-c.and-who.cn/User_info/update？Uuserid**
 - **表单要求**
 
 | 属性名          | 必要性 | 最小长度 | 最大长度 | 特殊要求
@@ -135,6 +135,7 @@
 | **Uuserlang**   | X      | 1        | 20       | -
 
 
+- **查询示例：http://contacts-c.and-who.cn/User_info/update?Uuserid=031502443**
 - **示例**
 ```
 {
