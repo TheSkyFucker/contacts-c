@@ -7,6 +7,7 @@ class User_info_model extends CI_Model {
 	 */
 	public function get($form)
 	{
+
 		//check token
 		$this->load->model('User_model', 'user');
 		$this->user->check_token($form['Utoken']);
@@ -22,6 +23,7 @@ class User_info_model extends CI_Model {
 
 		//return
 		return $result;
+
 	}
 
 
@@ -30,6 +32,7 @@ class User_info_model extends CI_Model {
 	 */
 	public function delete($form)
 	{
+
 		//check token
 		$this->load->model('User_model', 'user');
 		$this->user->check_token($form['Utoken']);
@@ -47,12 +50,13 @@ class User_info_model extends CI_Model {
 			->result_array();
 		if ( ! $exist)
 		{
-			throw new Exception("该学生不存在", 1);
+			throw new Exception("该学生不在你的同学录中", 1);
 		}
 
 		//DO delete
 		$where = array('Uuserid' => $form['Uuserid']);
 		$this->db->delete('user_rela', $where);
+
 	}
 
 
@@ -61,8 +65,9 @@ class User_info_model extends CI_Model {
 	 */
 	public function register($form)
 	{
+
 		//config
-		$members_info = array('Uuserid', 'Uusername', 'Uadress', 'Uuserphone', 'Uuserwechat', 'Uuseremail', 'Uuserqq', 'Uuserlang');
+		$members_info = array('Uuserid');
 		$members_rela = array('Uuserid', 'URrela');
 
 		//check token
@@ -76,11 +81,21 @@ class User_info_model extends CI_Model {
 			->result_array()[0]['Uusername'];
 
 		//check exist
-		$where = array('Uuserid' => $form['Uuserid'], 'URrela' => $form['URrela']);
+		$where = array('Uuserid' => $form['Uuserid']);
 		$exist = $this->db->where($where)
+			->get('user_info')
+			->result_array();
+		if ( ! $exist)
+		{
+			throw new Exception("该学生不存在", 1);
+		}
+
+		//check repeat
+		$where = array('Uuserid' => $form['Uuserid'], 'URrela' => $form['URrela']);
+		$repeat = $this->db->where($where)
 			->get('user_rela')
 			->result_array();
-		if ($exist)
+		if ($repeat)
 		{
 			throw new Exception("该学生已存在于你的同学录中", 1);
 		}
@@ -88,22 +103,6 @@ class User_info_model extends CI_Model {
 		{
 			//insert rela
 			$this->db->insert('user_rela', filter($form, $members_rela));
-		}
-
-		//check repeat
-		$where = array('Uuserid' => $form['Uuserid']);
-		$repeat = $this->db->where($where)
-			->get('user_info')
-			->result_array();
-		if ($repeat)
-		{
-			//update info
-			$this->db->update('user_info', filter($form, $members_info), $where);
-		}
-		else
-		{
-			//insert info
-			$this->db->insert('user_info', filter($form, $members_info));
 		}
 
 	}
@@ -114,6 +113,7 @@ class User_info_model extends CI_Model {
 	 */
 	public function update($form)
 	{
+
 		//check token
 		$this->load->model('User_model', 'user');
 		$this->user->check_token($form['Utoken']);
@@ -124,22 +124,19 @@ class User_info_model extends CI_Model {
 			->get('user')
 			->result_array()[0]['Uusername'];
 
-		//check exist
-		$where = array('Uuserid' => $form['Uuserid'], 'URrela' => $form['URrela']);
-		$exist = $this->db->where($where)
-			->get('user_rela')
-			->result_array();
-		if ( ! $exist)
+		//check self
+		if ($form['URrela'] != $form['Uuserid'])
 		{
-			throw new Exception("该学生不在于你的同学录中", 1);
+			throw new Exception("不能修改他人信息", 1);
 		}
 
 		//config
-		$members = array('Uuserid', 'Uusername', 'Uadress',	'Uuserphone', 'Uuserwechat', 'Uuseremail', 'Uuserqq', 'Uuserlang');
+		$members = array('Uusername', 'Uadress', 'Uuserphone', 'Uuserwechat', 'Uuseremail', 'Uuserqq', 'Uuserlang');
 
 		//update
 		$where = array('Uuserid' => $form['Uuserid']);
 		$this->db->update('user_info', filter($form, $members), $where);
+		
 	}
 
 
