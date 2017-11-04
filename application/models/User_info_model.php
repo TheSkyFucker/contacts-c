@@ -92,6 +92,22 @@ class User_info_model extends CI_Model {
 		}
 
 	}
+
+
+	/**
+	 * 修改学生信息
+	 */
+	public function update($form)
+	{
+		//config
+		$members = array('Uuserid', 'Uusername', 'Uadress',	'Uuserphone', 'Uuserwechat', 'Uuseremail', 'Uuserqq', 'Uuserlang');
+
+		//update
+		$where = array('Uuserid' => $form['Uuserid']);
+		$this->db->update('user_info', filter($form, $members), $where);
+
+	}
+
 }
 
 
