@@ -4,8 +4,8 @@
 $config = array(
 
 
-	//xx表单
-	'xx' => array(
+	//用户登录表单
+	'user_login' => array(
 		array(
 			'field' => 'Uusername',
 			'label' => '用户名',
