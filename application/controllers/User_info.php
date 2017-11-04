@@ -122,7 +122,7 @@ class User_info extends CI_Controller {
  		//config
  		$members = array('Utoken', 'Uuserid', 'Uusername', 'Uadress', 'Uuserphone', 'Uuserwechat', 'Uuseremail', 'Uuserqq', 'Uuserlang');
  
- 		//post
+ 		//update
 		try
  		{
  			//get post
@@ -158,6 +158,52 @@ class User_info extends CI_Controller {
 
 		//return
 		output_data(1, '修改成功', array());
+	}
+
+
+	/**
+	 * 获取用户同学列表
+	 */
+	public function get_list()
+	{
+		//config
+		$members = array('Utoken', 'Uuserid', 'page_size', 'page', 'orderby');
+
+		//get_list
+		try
+		{
+
+			//get post
+			$post['Utoken'] = get_token();
+			if ( ! $this->input->get('Uuserid'))
+			{
+				throw new Exception('必须指定学生学号');
+			}
+			$post['Uuserid'] = $this->input->get('Uuserid');
+			if ($this->input->get('page_size') && $this->input->get('page'))
+			{
+				$post['page_size'] = $this->input->get('page_size');
+				$post['page'] = $this->input->get('page');
+			}
+			if ($this->input->get('orderby'))
+			{
+				$post['orderby'] = $this->input->get('orderby');
+			}
+
+			//DO get_list
+			$this->load->model('User_info_model', 'info');
+			$data = $this->info->get_list(filter($post, $members));
+
+		}
+		catch(Exception $e)
+		{
+			output_data($e->getCode(), $e->getMessage(), array());
+			return;
+		}
+
+		//return
+		output_data(1, '获取成功', $data);
+
 	}
 	
 }
