@@ -7,6 +7,10 @@ class User_info_model extends CI_Model {
 	 */
 	public function get($form)
 	{
+		//check token
+		$this->load->model('User_model', 'user');
+		$this->user->check_token($form['Utoken']);
+
 		//get info
 		$where = array('Uuserid' => $form['Uuserid']);
 
@@ -26,18 +30,29 @@ class User_info_model extends CI_Model {
 	 */
 	public function delete($form)
 	{
+		//check token
+		$this->load->model('User_model', 'user');
+		$this->user->check_token($form['Utoken']);
+
+		//get URrela
+		$form['URrela'] = $this->db->select('Uusername')
+			->where('Utoken', $form['Utoken'])
+			->get('user')
+			->result_array()[0]['Uusername'];
+
 		//check exist
-		$exist = $this->db->where('Uuserid', $form['Uuserid'])
-			->get('user_info')
+		$where = array('Uuserid' => $form['Uuserid'], 'URrela' => $form['URrela']);
+		$exist = $this->db->where($where)
+			->get('user_rela')
 			->result_array();
 		if ( ! $exist)
 		{
-			throw new Exception("学生不存在", 1);
+			throw new Exception("该学生不存在", 1);
 		}
 
 		//DO delete
 		$where = array('Uuserid' => $form['Uuserid']);
-		$this->db->delete('user_info', $where);
+		$this->db->delete('user_rela', $where);
 	}
 
 
@@ -99,13 +114,32 @@ class User_info_model extends CI_Model {
 	 */
 	public function update($form)
 	{
+		//check token
+		$this->load->model('User_model', 'user');
+		$this->user->check_token($form['Utoken']);
+
+		//get URrela
+		$form['URrela'] = $this->db->select('Uusername')
+			->where('Utoken', $form['Utoken'])
+			->get('user')
+			->result_array()[0]['Uusername'];
+
+		//check exist
+		$where = array('Uuserid' => $form['Uuserid'], 'URrela' => $form['URrela']);
+		$exist = $this->db->where($where)
+			->get('user_rela')
+			->result_array();
+		if ( ! $exist)
+		{
+			throw new Exception("该学生不在于你的同学录中", 1);
+		}
+
 		//config
 		$members = array('Uuserid', 'Uusername', 'Uadress',	'Uuserphone', 'Uuserwechat', 'Uuseremail', 'Uuserqq', 'Uuserlang');
 
 		//update
 		$where = array('Uuserid' => $form['Uuserid']);
 		$this->db->update('user_info', filter($form, $members), $where);
-
 	}
 
 }
