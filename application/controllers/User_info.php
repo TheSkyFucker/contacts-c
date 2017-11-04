@@ -215,6 +215,88 @@ class User_info extends CI_Controller {
 		output_data(1, '获取成功', $data);
 
 	}
+
+
+	/**
+	 * 导出表格
+	 */
+	public function down_file()
+	{
+		
+		$Uuserid = $this->input->get('Uuserid');
+
+		$conn = mysqli_connect("localhost", "root", "", "contacts-c");
+		$temp_sql = "create table tmp_query (Uuserid char(20) default NULL)";
+		$temp_query = mysqli_query($conn,$temp_sql);
+		$sql = "insert into tmp_query(Uuserid) select URrela from user_rela where Uuserid=$Uuserid";
+		mysqli_query($conn,$sql);
+
+		$query = $this->db->select()
+				->from('user_info')
+				->join('tmp_query','user_info.Uuserid=tmp_query.Uuserid')
+				->get();
+		
+		$sql = "drop TABLE tmp_query";
+		mysqli_query($conn,$sql);
+
+		if (! $query)
+		{
+			return false;
+		}
+
+		//Starting the PHPExcel library
+		$this->load->library('PHPExcel');
+		$this->load->library('PHPExcel/IOFactory');
+
+		$objPHPExcel = new PHPExcel();
+		$objPHPExcel->getProperties()->setTitle("同学录")
+			->setDescription("none");
+
+		$objPHPExcel->setActiveSheetIndex(0);
+
+		//Field names in the first row
+		$fields = $query->list_fields();
+		$col = 0;
+		foreach ($fields as $field) 
+		{
+			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, 1, $field);
+            $col++;
+            if ($col == 9)
+            {
+            	break;
+            }
+		}
+
+
+		// Fetching the table data
+        $row = 2;
+        foreach($query->result() as $data)
+        {
+            $col = 0;
+            foreach ($fields as $field)
+            {
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($col, $row, $data->$field);
+                $col++;
+                if ($col == 9)
+                {
+                	break;
+                }
+            }
+ 
+            $row++;
+        }
+ 
+        $objPHPExcel->setActiveSheetIndex(0);
+ 
+        $objWriter = IOFactory::createWriter($objPHPExcel, 'Excel5');
+ 
+        // Sending headers to force the user to download the file
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="班级同学录 '.date('Y-m-d').'.xls"');
+        header('Cache-Control: max-age=0');
+  
+        $objWriter->save('php://output');
+    }
 	
 }
 
