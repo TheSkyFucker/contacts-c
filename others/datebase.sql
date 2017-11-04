@@ -1,4 +1,14 @@
 
+CREATE TABLE IF NOT EXISTS `user` (
+	`Uusername` char(20),
+	`Utype` char(20),
+	`Upassword` char(20) NOT NULL,
+	`Utoken` char(30) NOT NULL,
+	`Ulast_visit` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY(`Uusername`)
+)	ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
 CREATE TABLE IF NOT EXISTS `user_info` (
 	`UIid` int AUTO_INCREMENT,
 	`Uuserid` char(20) default ' ',
