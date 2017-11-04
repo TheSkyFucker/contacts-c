@@ -47,10 +47,10 @@
 	"type": 1,
 	"message": "登陆成功",
 	"data": {
-		"学号": "xxxxxx",
-		"姓名": "xxx",
-		"本人电话": "xxxxxxx",
-		"家庭住址": "xxxxxxx",
+		"xh": "xxxxxx",
+		"xm": "xxx",
+		"brdh": "xxxxxxx",
+		"jtzz": "xxxxxxx",
 		"Utoken": "J8FPzEVUyiYl6LdR5rSnXbZCgWMwAt"
 	}
 }
