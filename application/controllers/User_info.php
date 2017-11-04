@@ -42,13 +42,15 @@ class User_info extends CI_Controller {
 	public function delete()
 	{	
 		//config
-		$members = array('Uuserid');
+		$members = array('Utoken', 'Uuserid');
 
 		//delete
 		try
 		{
 			//get post
+			$post['Utoken'] = get_token();
 			$post['Uuserid'] = $this->input->get('Uuserid');
+
 			//DO delete
 			$this->load->model('User_info_model', 'info');
 			$this->info->delete(filter($post, $members));
@@ -70,13 +72,14 @@ class User_info extends CI_Controller {
 	public function register()
 	{
 		//config
-		$members = array('Uuserid',	'Uusername', 'Uadress',	'Uuserphone', 'Uuserwechat', 'Uuseremail', 'Uuserqq', 'Uuserlang');
+		$members = array('Utoken', 'Uuserid', 'Uusername', 'Uadress', 'Uuserphone', 'Uuserwechat', 'Uuseremail', 'Uuserqq', 'Uuserlang');
 
 		//register
 		try
 		{
 			//get post
 			$post = get_post();
+			$post['Utoken'] = get_token();
 
 			//check form
 			$this->load->library('form_validation');
