@@ -46,6 +46,9 @@ class User_info_model extends CI_Model {
 	 */
 	public function register($form)
 	{
+		//config
+		$members = array('Uuserid',	'Uusername', 'Uadress',	'Uuserphone', 'Uuserwechat', 'Uuseremail', 'Uuserqq', 'Uuserlang');
+
 		//check repeat
 		$repeat = $this->db->where('Uuserid', $form['Uuserid'])
 			->get('user_info')
@@ -56,7 +59,7 @@ class User_info_model extends CI_Model {
 		}
 
 		//insert
-		$this->db->insert('user_info', $form);
+		$this->db->insert('user_info', filter($form, $members));
 	}
 }
 

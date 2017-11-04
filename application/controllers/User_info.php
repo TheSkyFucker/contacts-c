@@ -23,7 +23,7 @@ class User_info extends CI_Controller {
 			$post['Uuserid'] = $this->input->get('Uuserid');
 			//DO get
 			$this->load->model('User_info_model', 'info');
-			$data = $this->info->get($post);
+			$data = $this->info->get(filter($post, $members));
 		}
 		catch(Exception $e)
 		{
@@ -51,7 +51,7 @@ class User_info extends CI_Controller {
 			$post['Uuserid'] = $this->input->get('Uuserid');
 			//DO delete
 			$this->load->model('User_info_model', 'info');
-			$this->info->delete($post);
+			$this->info->delete(filter($post, $members));
 		}
 		catch(Exception $e)
 		{
