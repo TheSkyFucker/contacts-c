@@ -127,7 +127,7 @@ class User_info extends CI_Controller {
  	{
 
  		//config
- 		$members = array('Utoken', 'Uuserid','Uusername', 'Uadress', 'Uuserphone', 'Uuserwechat', 'Uuseremail', 'Uuserqq', 'Uuserlang');
+ 		$members = array('Utoken', 'Uuserid', 'Uusername', 'Uadress', 'Uuserphone', 'Uuserwechat', 'Uuseremail', 'Uuserqq', 'Uuserlang');
  
  		//update
 		try
@@ -175,7 +175,7 @@ class User_info extends CI_Controller {
 	 */
 	public function get_list()
 	{
-		
+
 		//config
 		$members = array('Utoken', 'Uuserid', 'page_size', 'page', 'orderby');
 

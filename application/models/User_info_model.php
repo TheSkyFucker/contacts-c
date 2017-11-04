@@ -50,7 +50,7 @@ class User_info_model extends CI_Model {
 			->result_array();
 		if ( ! $exist)
 		{
-			throw new Exception("该学生不在你的同学录中", 1);
+			throw new Exception("该学生不在你的同学录中", 0);
 		}
 
 		//DO delete
@@ -87,7 +87,7 @@ class User_info_model extends CI_Model {
 			->result_array();
 		if ( ! $exist)
 		{
-			throw new Exception("该学生不存在", 1);
+			throw new Exception("该学生不存在", 0);
 		}
 
 		//check repeat
@@ -97,7 +97,7 @@ class User_info_model extends CI_Model {
 			->result_array();
 		if ($repeat)
 		{
-			throw new Exception("该学生已存在于你的同学录中", 1);
+			throw new Exception("该学生已存在于你的同学录中", 0);
 		}
 		else
 		{
@@ -127,7 +127,7 @@ class User_info_model extends CI_Model {
 		//check self
 		if ($form['URrela'] != $form['Uuserid'])
 		{
-			throw new Exception("不能修改他人信息", 1);
+			throw new Exception("不能修改他人信息", 0);
 		}
 
 		//config
@@ -136,7 +136,7 @@ class User_info_model extends CI_Model {
 		//update
 		$where = array('Uuserid' => $form['Uuserid']);
 		$this->db->update('user_info', filter($form, $members), $where);
-		
+
 	}
 
 
@@ -179,7 +179,7 @@ class User_info_model extends CI_Model {
     	$orderby = isset($form['orderby']) ? $form['orderby'] : 'Uuserid';
     	if ( ! isset($orderby_table[$orderby]))
     	{
-    		throw new Exception("不合法的排序字段");
+    		throw new Exception("不合法的排序字段", 0);
     	}
 
     	//get info
@@ -194,7 +194,7 @@ class User_info_model extends CI_Model {
     			->result_array();
     		array_push($infos, $info);
     	}
-    	
+
 		//return
 		$ret['editable'] = isset($user) && $user == $form['Uuserid'];
 		$ret['data'] = $infos;

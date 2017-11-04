@@ -170,7 +170,7 @@
 ## **接口 · 获取某用户的同学列表**
 - **请求方法：GET**
 - **按学号排序**
-- **接口网址：http://contacts-c.and-who.cn/Blog/get_list?Uuserid**
+- **接口网址：http://contacts-c.and-who.cn/User_info/get_list?Uuserid**
 
 | **`GET` 字段可选项** | 备注
 | --------------- | --------
@@ -197,8 +197,8 @@
 | **Uuserqq**     | QQ号 
 | **Uuserlang**   | 个性语言
 
-- **查询示例：http://contacts-c.and-who.cn/Blog/get_list?Uuserid=031502443**
-- **查询示例：http://contacts-c.and-who.cn/Blog/get_list?Uuserid=031502443&&page_size=1&&page=2**
+- **查询示例：http://contacts-c.and-who.cn/User_info/get_list?Uuserid=031502443**
+- **查询示例：http://contacts-c.and-who.cn/User_info/get_list?Uuserid=031502443&&page_size=1&&page=2**
 ```
 {
 	"type": 1,
