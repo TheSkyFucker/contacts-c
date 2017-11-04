@@ -39,4 +39,37 @@ class User_info_model extends CI_Model {
 		$where = array('Uuserid' => $form['Uuserid']);
 		$this->db->delete('user_info', $where);
 	}
+
+
+	/**
+	 * 添加学生信息
+	 */
+	public function register($form)
+	{
+		//check repeat
+		$repeat = $this->db->where('Uuserid', $form['Uuserid'])
+			->get('user_info')
+			->result_array();
+		if ($repeat)
+		{
+			throw new Exception("该学生已存在", 1);
+		}
+
+		//insert
+		$this->db->insert('user_info', $form);
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
