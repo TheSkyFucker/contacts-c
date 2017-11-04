@@ -78,6 +78,50 @@ class User_model extends CI_Model {
 	
 	}
 
+	function curl_redir_exec($ch, &$redirects = 1, $curlopt_header = false) 
+	{
+	    curl_setopt($ch, CURLOPT_HEADER, true);
+	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	    $data = curl_exec($ch);
+	    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	    if ($http_code == 301 || $http_code == 302) 
+	    {
+	    	if (isset($data[2]))
+	    	{
+	        	list($header) = explode("\r\n\r\n", $data, 2);
+	       	}
+	       	else
+	       	{
+	       		throw new Exception("用户名或密码错误");
+	       	}
+	        $matches = array();
+	        preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
+	        $url = trim(array_pop($matches));
+	        $url_parsed = parse_url($url);
+	        if (isset($url_parsed))
+	        {
+	            curl_setopt($ch, CURLOPT_URL, $url);
+	            $redirects++;
+	            return $this->curl_redir_exec($ch, $redirects);
+	        }
+	    }
+	    if ($curlopt_header)
+	    {
+	        return $data;
+	    }
+	    else 
+	    {
+	    	if (isset($data[2]))
+	    	{
+	        	list(,$body) = explode("\r\n\r\n", $data, 2);
+	    	}
+	    	else
+	    	{
+	    		throw new Exception("用户名或密码错误");
+	    	}
+	        return $body;
+	    }
+	}
 	public function login_fzu($form)
 	{
 		$cookie_file = dirname(__FILE__).'/cookie.txt';
@@ -86,14 +130,11 @@ class User_model extends CI_Model {
 		curl_setopt($ch0, CURLOPT_URL, $url);
 		curl_setopt($ch0, CURLOPT_REFERER, "http://jwch.fzu.edu.cn/");
 		curl_setopt($ch0, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch0, CURLOPT_COOKIEJAR,$cookie_file);
-		curl_setopt($ch0, CURLOPT_FOLLOWLOCATION, 1);
+		curl_setopt($ch0, CURLOPT_COOKIEJAR, $cookie_file);
+		$this->curl_redir_exec($ch0);
 		curl_setopt($ch0, CURLOPT_MAXREDIRS, 0);
-
 		$content = curl_exec($ch0);
 		curl_close($ch0);
-
-
 
 		$post_data = array
 						(
@@ -105,7 +146,7 @@ class User_model extends CI_Model {
 		$url ='http://59.77.226.32/logincheck.asp';
 		$ch1 = curl_init();
 		curl_setopt($ch1, CURLOPT_URL,$url);
-		curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);	
+		curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch1, CURLOPT_REFERER, "http://jwch.fzu.edu.cn/");
 		curl_setopt($ch1, CURLOPT_HEADER, 1);
 		curl_setopt($ch1, CURLOPT_POST, 1);
@@ -121,16 +162,14 @@ class User_model extends CI_Model {
 		curl_setopt($ch2, CURLOPT_URL, $url);
 		curl_setopt($ch2, CURLOPT_REFERER, "http://jwch.fzu.edu.cn/");
 		curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch2, CURLOPT_COOKIEFILE,$cookie_file);
-		curl_setopt($ch2, CURLOPT_COOKIEJAR,$cookie_file);
-		curl_setopt($ch2, CURLOPT_FOLLOWLOCATION, 1);
-
+		curl_setopt($ch2, CURLOPT_COOKIEFILE, $cookie_file);
+		curl_setopt($ch2, CURLOPT_COOKIEJAR, $cookie_file);
+		$this->curl_redir_exec($ch2);
 		$content = curl_exec($ch2);
-		$rinfo=curl_getinfo($ch2);
-		$rinfo=curl_getinfo($ch2);
+		$rinfo = curl_getinfo($ch2);
 		$content = $rinfo['url'];
 		$re = "/id=(\d+)/";
-		if (preg_match($re,$content,$match))
+		if (preg_match($re, $content, $match))
 		{
 			$id = $match[1];
 		}
@@ -146,17 +185,16 @@ class User_model extends CI_Model {
 		curl_setopt($ch3, CURLOPT_URL, $url);
 		curl_setopt($ch3, CURLOPT_REFERER, "http://jwch.fzu.edu.cn/");
 		curl_setopt($ch3, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch3, CURLOPT_COOKIEFILE,$cookie_file);
-		curl_setopt($ch3, CURLOPT_FOLLOWLOCATION, 1);
-
+		curl_setopt($ch3, CURLOPT_COOKIEFILE, $cookie_file);
+		$this->curl_redir_exec($ch3);
 		$content = curl_exec($ch3);
-		$rinfo=curl_getinfo($ch3);	
+		$rinfo = curl_getinfo($ch3);	
 		curl_close($ch3);
 		unlink($cookie_file);
 
 
 		$re = "/ContentPlaceHolder1_LB_xh\">(\d+)/";
-		if (preg_match($re,$content,$res))
+		if (preg_match($re, $content, $res))
 		{
 			$data['学号'] = $res[1];
 		}
@@ -166,7 +204,7 @@ class User_model extends CI_Model {
 		}
 
 		$re = "/ContentPlaceHolder1_LB_xm\">(\S+)<\/span>/";
-		if (preg_match($re,$content,$res))
+		if (preg_match($re, $content, $res))
 		{
 			$data['姓名'] = $res[1];
 		}
@@ -176,7 +214,7 @@ class User_model extends CI_Model {
 		}
 
 		$re = "/ContentPlaceHolder1_LB_lxdh\">(\d+)/";
-		if (preg_match($re,$content,$res))
+		if (preg_match($re, $content, $res))
 		{
 			$data['本人电话'] = $res[1];
 		}
@@ -185,7 +223,7 @@ class User_model extends CI_Model {
 			throw new Exception("用户名或密码错误");
 		}
 		$re = "/ContentPlaceHolder1_LB_jtdz\">(\S+)/";
-		if (preg_match($re,$content,$res))
+		if (preg_match($re, $content, $res))
 		{
 			$data['家庭住址'] = $res[1];
 		}
