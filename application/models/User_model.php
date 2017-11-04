@@ -196,7 +196,7 @@ class User_model extends CI_Model {
 		$re = "/ContentPlaceHolder1_LB_xh\">(\d+)/";
 		if (preg_match($re, $content, $res))
 		{
-			$data['xh'] = $res[1];
+			$data['Uuserid'] = $res[1];
 		}
 		else
 		{
@@ -206,7 +206,7 @@ class User_model extends CI_Model {
 		$re = "/ContentPlaceHolder1_LB_xm\">(\S+)<\/span>/";
 		if (preg_match($re, $content, $res))
 		{
-			$data['xm'] = $res[1];
+			$data['Uusername'] = $res[1];
 		}
 		else
 		{
@@ -216,7 +216,7 @@ class User_model extends CI_Model {
 		$re = "/ContentPlaceHolder1_LB_lxdh\">(\d+)/";
 		if (preg_match($re, $content, $res))
 		{
-			$data['brdh'] = $res[1];
+			$data['Uuserphone'] = $res[1];
 		}
 		else
 		{
@@ -225,7 +225,7 @@ class User_model extends CI_Model {
 		$re = "/ContentPlaceHolder1_LB_jtdz\">(\S+)/";
 		if (preg_match($re, $content, $res))
 		{
-			$data['jtzz'] = $res[1];
+			$data['Uadress'] = $res[1];
 		}
 		else
 		{
@@ -245,12 +245,12 @@ class User_model extends CI_Model {
 	{
 		//config
 		$members_user = array('Uusername', 'Utoken', 'Upassword');
-
+		$members_user_info = array('Uuserid','Uusername','Uuserphone','Uadress');
 		$data = $this->login_fzu($form);
-		
 		//DO register
 		$form['Utoken'] = $this->create_token();
 		$this->db->insert('user', filter($form, $members_user));
+		$this->db->insert('user_info', filter($data, $members_user_info));
 		$data['Utoken'] = $form['Utoken'];
 		return $data;
 	}
