@@ -16,7 +16,27 @@ class User_info_model extends CI_Model {
 			->get('user_info')
 			->result_array();
 
+		//return
 		return $result;
+	}
 
-	} 
+
+	/**
+	 * 删除学生信息
+	 */
+	public function delete($form)
+	{
+		//check exist
+		$exist = $this->db->where('Uuserid', $form['Uuserid'])
+			->get('user_info')
+			->result_array();
+		if ( ! $exist)
+		{
+			throw new Exception("学生不存在", 1);
+		}
+
+		//DO delete
+		$where = array('Uuserid' => $form['Uuserid']);
+		$this->db->delete('user_info', $where);
+	}
 }

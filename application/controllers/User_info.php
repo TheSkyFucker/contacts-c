@@ -34,6 +34,34 @@ class User_info extends CI_Controller {
 		//return
 		output_data(1, '获取成功', $data);
 	}
+
+
+	/**
+	 *删除学生信息
+	 */
+	public function delete()
+	{	
+		//config
+		$members = array('Uuserid');
+
+		//delete
+		try
+		{
+			//get post
+			$post['Uuserid'] = $this->input->get('Uuserid');
+			//DO delete
+			$this->load->model('User_info_model', 'info');
+			$this->info->delete($post);
+		}
+		catch(Exception $e)
+		{
+			output_data($e->getCode(), $e->getMessage(), array());
+			return;
+		}
+
+		//return
+		output_data(1, '删除成功', array());
+	}
 }
 
 
