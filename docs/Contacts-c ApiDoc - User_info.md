@@ -70,7 +70,7 @@
 
 ---
 
-## **接口 · 删除文章**
+## **接口 · 删除同学关系**
 - **请求方法：GET**
 - **接口网址：http://contacts-c.and-who.cn/User_info/dlete?Uuserid**
 - **表单要求**
@@ -91,7 +91,7 @@
 
 ---
 
-## **接口 · 增加同学**
+## **接口 · 增加同学关系**
 - **请求方法：POST**
 - **接口网址：http://contacts-c.and-who.cn/User_info/register**
 - **表单要求**
@@ -119,7 +119,7 @@
 
 ---
 
-## **接口 · 修改信息**
+## **接口 · 修改用户个人信息**
 - **请求方法：POST**
 - **接口网址：http://contacts-c.and-who.cn/User_info/update**
 - **表单要求**
