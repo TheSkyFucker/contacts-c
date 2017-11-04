@@ -74,7 +74,7 @@
 =======
 
 - **请求方法：GET**
-- **接口网址：http://contacts-c.and-who.cn/User_info/dlete?Uuserid**
+- **接口网址：http://contacts-c.and-who.cn/User_info/delete?Uuserid**
 - **表单要求**
 
 | 属性名          | 必要性 | 最小长度 | 最大长度 | 特殊要求
@@ -230,7 +230,6 @@
 
 
 ---
-
 
 ## **接口 · 增加导出excel文件接口**
 =======
