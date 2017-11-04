@@ -127,7 +127,6 @@ class User_model extends CI_Model {
 
 		$content = curl_exec($ch2);
 		$rinfo=curl_getinfo($ch2);
-		//var_dump($rinfo); 	
 		$rinfo=curl_getinfo($ch2);
 		$content = $rinfo['url'];
 		$re = "/id=(\d+)/";
@@ -153,7 +152,7 @@ class User_model extends CI_Model {
 		$content = curl_exec($ch3);
 		$rinfo=curl_getinfo($ch3);	
 		curl_close($ch3);
-
+		unlink($cookie_file);
 
 
 		$re = "/ContentPlaceHolder1_LB_xh\">(\d+)/";
