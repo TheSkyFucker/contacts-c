@@ -47,10 +47,10 @@
 	"type": 1,
 	"message": "登陆成功",
 	"data": {
-		"xh": "xxxxxx",
-		"xm": "xxx",
-		"brdh": "xxxxxxx",
-		"jtzz": "xxxxxxx",
+		"Uuserid": "xxxxxx",
+		"Uusername": "xxx",
+		"Uuserphone": "xxxxxxx",
+		"Uadress": "xxxxxxx",
 		"Utoken": "J8FPzEVUyiYl6LdR5rSnXbZCgWMwAt"
 	}
 }
