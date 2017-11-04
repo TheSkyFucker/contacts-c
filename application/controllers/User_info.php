@@ -74,7 +74,7 @@ class User_info extends CI_Controller {
 	public function register()
 	{
 		//config
-		$members = array('Utoken', 'Uuserid', 'Uusername', 'Uadress', 'Uuserphone', 'Uuserwechat', 'Uuseremail', 'Uuserqq', 'Uuserlang');
+		$members = array('Utoken', 'Uuserid');
 
 		//register
 		try
@@ -120,7 +120,7 @@ class User_info extends CI_Controller {
  	public function update()
  	{
  		//config
- 		$members = array('Utoken', 'Uuserid', 'Uusername', 'Uadress', 'Uuserphone', 'Uuserwechat', 'Uuseremail', 'Uuserqq', 'Uuserlang');
+ 		$members = array( 'Utoken', 'Uuserid','Uusername', 'Uadress', 'Uuserphone', 'Uuserwechat', 'Uuseremail', 'Uuserqq', 'Uuserlang');
  
  		//update
 		try
@@ -128,6 +128,7 @@ class User_info extends CI_Controller {
  			//get post
  			$post = get_post();
  			$post['Utoken'] = get_token();
+ 			$post['Uuserid'] = $this->input->get('Uuserid');
  
  			//check form
  			$this->load->library('form_validation');

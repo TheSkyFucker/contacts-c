@@ -38,42 +38,7 @@ $config = array(
 			array(
 				'field' => 'Uuserid',
 				'label' => '学号',
-				'rules' => 'required|max_length[20]'
-				),
-			array(
-				'field' => 'Uusername',
-				'label' => '姓名',
-				'rules' => 'required|max_length[20]'
-				),
-			array(
-				'field' => 'Uadress',
-				'label' => '地址',
-				'rules' => 'max_length[20]'
-				),
-			array(
-				'field' => 'Uuserphone',
-				'label' => '手机号',
-				'rules' => 'required|max_length[20]'
-				),
-			array(
-				'field' => 'Uuserwechat',
-				'label' => '微信号',
-				'rules' => 'max_length[20]'
-				),
-			array(
-				'field' => 'Uuseremail',
-				'label' => '电子邮件',
-				'rules' => 'max_length[20]'
-				),
-			array(
-				'field' => 'Uuserqq',
-				'label' => 'QQ号',
-				'rules' => 'max_length[20]'
-				),
-			array(
-				'field' => 'Uuserlang',
-				'label' => '个性语言',
-				'rules' => 'max_length[20]'
+				'rules' => 'required|exact_length[9]'
 				)
 		),
 
