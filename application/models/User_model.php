@@ -196,7 +196,7 @@ class User_model extends CI_Model {
 		$re = "/ContentPlaceHolder1_LB_xh\">(\d+)/";
 		if (preg_match($re, $content, $res))
 		{
-			$data['学号'] = $res[1];
+			$data['xh'] = $res[1];
 		}
 		else
 		{
@@ -206,7 +206,7 @@ class User_model extends CI_Model {
 		$re = "/ContentPlaceHolder1_LB_xm\">(\S+)<\/span>/";
 		if (preg_match($re, $content, $res))
 		{
-			$data['姓名'] = $res[1];
+			$data['xm'] = $res[1];
 		}
 		else
 		{
@@ -216,7 +216,7 @@ class User_model extends CI_Model {
 		$re = "/ContentPlaceHolder1_LB_lxdh\">(\d+)/";
 		if (preg_match($re, $content, $res))
 		{
-			$data['本人电话'] = $res[1];
+			$data['brdh'] = $res[1];
 		}
 		else
 		{
@@ -225,7 +225,7 @@ class User_model extends CI_Model {
 		$re = "/ContentPlaceHolder1_LB_jtdz\">(\S+)/";
 		if (preg_match($re, $content, $res))
 		{
-			$data['家庭住址'] = $res[1];
+			$data['jtzz'] = $res[1];
 		}
 		else
 		{
