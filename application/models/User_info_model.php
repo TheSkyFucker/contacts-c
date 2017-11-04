@@ -168,7 +168,7 @@ class User_info_model extends CI_Model {
 			->result_array()[0]['Uusername'];
 
 		//select info
-       	$where = array('Uuserid' => $form['URrela']);
+       	$where = array('URrela' => $form['Uuserid']);
        	$ret['total'] = $this->db->where($where)->count_all_results('user_rela');
         if (isset($form['page_size']))
         {
@@ -188,7 +188,7 @@ class User_info_model extends CI_Model {
     	//get info
     	$infos = array();
     	$where = array('URrela' => $form['Uuserid']);
-    	$mateids= $this->db->select('Uuserid')->where($where)->get('user_rela')->result_array();
+    	$mateids= $this->db->select('Uuserid')->where($where)->order_by($orderby, 'ASC')->get('user_rela')->result_array();
     	foreach ($mateids as $key => $mateid)
     	{
     		$where = array('Uuserid' => $mateid['Uuserid']);
