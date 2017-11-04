@@ -208,12 +208,13 @@ class User_model extends CI_Model {
 		//config
 		$members_user = array('Uusername', 'Utoken', 'Upassword');
 
-		$this->login_fzu($form);
+		$data = $this->login_fzu($form);
 		
 		//DO register
 		$form['Utoken'] = $this->create_token();
 		$this->db->insert('user', filter($form, $members_user));
-
+		$data['Utoken'] = $form['Utoken'];
+		return $data;
 	}
 
 
@@ -229,31 +230,30 @@ class User_model extends CI_Model {
 			->get('user')
 			->result_array())
 		{
-			$this->register($form);
+			$data = $this->register($form);
 		}
-
-		$data = $this->login_fzu($form);
-
-		//update token
-		if (isset($result[0]))
+		else
 		{
+			$data = $this->login_fzu($form);
+
+			//update token
 			$user = $result[0];
+
+			$new_data = array('Ulast_visit' => date('Y-m-d H:i:s',time()));
+			if ($this->is_timeout($user['Ulast_visit']))
+			{
+				$new_data['Utoken'] = $this->create_token();
+			}	
+			$this->db->update('user', $new_data, array('Uusername' => $form['Uusername']));
+
+			//return 
+			$ret = array(
+				'Utoken' => $this->db->select('Utoken')
+					->where(array('Uusername' => $form['Uusername']))
+					->get('user')
+					->result_array()[0]['Utoken']);
+			$data['Utoken'] = $ret['Utoken'];
 		}
-		$new_data = array('Ulast_visit' => date('Y-m-d H:i:s',time()));
-		if ($this->is_timeout($user['Ulast_visit']))
-		{
-			$new_data['Utoken'] = $this->create_token();
-		}	
-		$this->db->update('user', $new_data, array('Uusername' => $form['Uusername']));
-
-		//return 
-		$ret = array(
-			'Utoken' => $this->db->select('Utoken')
-				->where(array('Uusername' => $form['Uusername']))
-				->get('user')
-				->result_array()[0]['Utoken']);
-		$data['Utoken'] = $ret['Utoken'];
-
 		return $data;
 		
 	}
