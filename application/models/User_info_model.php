@@ -127,7 +127,7 @@ class User_info_model extends CI_Model {
 		//check self
 		if ($form['URrela'] != $form['Uuserid'])
 		{
-			throw new Exception("不能修改他人信息", 1);
+			throw new Exception("不能修改他人信息", 0);
 		}
 
 		//config
@@ -179,7 +179,7 @@ class User_info_model extends CI_Model {
     	$orderby = isset($form['orderby']) ? $form['orderby'] : 'Uuserid';
     	if ( ! isset($orderby_table[$orderby]))
     	{
-    		throw new Exception("不合法的排序字段");
+    		throw new Exception("不合法的排序字段", 0);
     	}
 
     	//get info
