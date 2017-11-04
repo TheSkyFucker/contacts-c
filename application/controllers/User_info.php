@@ -70,7 +70,7 @@ class User_info extends CI_Controller {
 	public function register()
 	{
 		//config
-		$members = array('Uuserid',	'Uusername', 'Uadress',	'Uuserphone', 'Uuserwechat', 'Uuseremail', 'Uuserqq', 'Uuserlang');
+		$members = array('Uuserid',	'Uusername', 'Uadress', 'Uuserphone', 'Uuserwechat', 'Uuseremail', 'Uuserqq', 'Uuserlang');
 
 		//register
 		try
@@ -107,6 +107,53 @@ class User_info extends CI_Controller {
 		//return
 		output_data(1, "增加成功", array());
 	}
+
+
+	/**
+	 * 修改学生信息
+	 */
+	public function update()
+	{
+		//config
+		$members = array('Uuserid', 'Uusername', 'Uadress', 'Uuserphone', 'Uuserwechat', 'Uuseremail', 'Uuserqq', 'Uuserlang');
+
+		//post
+		try
+		{
+			//get post
+			$post = get_post();
+
+			//check form
+			$this->load->library('form_validation');
+			$this->form_validation->set_data($post);
+			if ( ! $this->form_validation->run('user_info_update'))
+			{
+				$this->load->helper('form');
+				foreach ($members as $member)
+				{
+					if (form_error($member))
+					{
+						throw new Exception(strip_tags(form_error($member)));
+					}
+				}
+				return;
+			}
+
+			//DO update
+			$this->load->model('User_info_model', 'info');
+			$this->info->update(filter($post, $members));
+
+		}
+		catch (Exception $e)
+		{
+			output_data($e->getCode(), $e->getMessage(), array());
+			return;
+		}
+
+		//return
+		output_data(1, '修改成功', array());
+	}
+	
 }
 
 
