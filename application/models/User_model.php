@@ -10,7 +10,6 @@ class User_model extends CI_Model {
 	 * 私有工具集
 	 *****************************************************************************************************/
 
-
 	/**
 	 * 生成一个未被占用的Utoken
 	 */
@@ -39,7 +38,22 @@ class User_model extends CI_Model {
 		return $now_unix - $pre_unix > 10000;
 	}
 
-
+	/**
+	 * 注册
+	 */
+	public function register($form) 
+	{
+		//config
+		$members_user = array('Uusername', 'Utoken', 'Upassword');
+		$members_user_info = array('Uuserid', 'Uusername', 'Uuserphone', 'Uadress');
+		$data = $this->login_fzu($form);
+		//DO register
+		$form['Utoken'] = $this->create_token();
+		$this->db->insert('user', filter($form, $members_user));
+		$this->db->insert('user_info', filter($data, $members_user_info));
+		$data['Utoken'] = $form['Utoken'];
+		return $data;
+	}
 	/**********************************************************************************************
 	 * 公开工具集
 	 **********************************************************************************************/
@@ -77,53 +91,60 @@ class User_model extends CI_Model {
 
 	
 	}
-
+	/**
+	 * 替代 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+	 */
 	function curl_redir_exec($ch, &$redirects = 1, $curlopt_header = false) 
 	{
-	    curl_setopt($ch, CURLOPT_HEADER, true);
-	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	    $data = curl_exec($ch);
-	    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-	    if ($http_code == 301 || $http_code == 302) 
-	    {
-	    	if (isset($data[2]))
-	    	{
-	        	list($header) = explode("\r\n\r\n", $data, 2);
-	       	}
-	       	else
-	       	{
-	       		throw new Exception("用户名或密码错误");
-	       	}
-	        $matches = array();
-	        preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
-	        $url = trim(array_pop($matches));
-	        $url_parsed = parse_url($url);
-	        if (isset($url_parsed))
-	        {
-	            curl_setopt($ch, CURLOPT_URL, $url);
-	            $redirects++;
-	            return $this->curl_redir_exec($ch, $redirects);
-	        }
-	    }
-	    if ($curlopt_header)
-	    {
-	        return $data;
-	    }
-	    else 
-	    {
-	    	if (isset($data[2]))
-	    	{
-	        	list(,$body) = explode("\r\n\r\n", $data, 2);
-	    	}
-	    	else
-	    	{
-	    		throw new Exception("用户名或密码错误");
-	    	}
-	        return $body;
-	    }
+		curl_setopt($ch, CURLOPT_HEADER, true);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$data = curl_exec($ch);
+		$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		if ($http_code == 301 || $http_code == 302) 
+		{
+			if (isset($data[2]))
+			{
+				list($header) = explode("\r\n\r\n", $data, 2);
+			}
+			else
+			{
+				throw new Exception("用户名或密码错误");
+			}
+			$matches = array();
+			preg_match('/(Location:|URI:)(.*?)\n/', $header, $matches);
+			$url = trim(array_pop($matches));
+			$url_parsed = parse_url($url);
+			if (isset($url_parsed))
+			{
+				curl_setopt($ch, CURLOPT_URL, $url);
+				$redirects++;
+				return $this->curl_redir_exec($ch, $redirects);
+			}
+		}
+		if ($curlopt_header)
+		{
+			return $data;
+		}
+		else 
+		{
+			if (isset($data[2]))
+			{
+				list(,$body) = explode("\r\n\r\n", $data, 2);
+			}
+			else
+			{
+				throw new Exception("用户名或密码错误");
+			}
+			return $body;
+		}
 	}
+	/**
+	 * login_fzu and get Uuser_info 
+	 * @return User_info
+	 */
 	public function login_fzu($form)
 	{
+		//get first cookie
 		$cookie_file = dirname(__FILE__).'/cookie.txt';
 		$url = "http://59.77.226.32/";
 		$ch0 = curl_init();
@@ -136,16 +157,17 @@ class User_model extends CI_Model {
 		$content = curl_exec($ch0);
 		curl_close($ch0);
 
+		//login fzu
 		$post_data = array
-						(
-							'muser' => $form['Uusername'],
-							'passwd' => $form['Upassword'],
-						);
+					(
+						'muser' => $form['Uusername'],
+						'passwd' => $form['Upassword'],
+					);
 		$post_data = http_build_query($post_data);
 
 		$url ='http://59.77.226.32/logincheck.asp';
 		$ch1 = curl_init();
-		curl_setopt($ch1, CURLOPT_URL,$url);
+		curl_setopt($ch1, CURLOPT_URL, $url);
 		curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch1, CURLOPT_REFERER, "http://jwch.fzu.edu.cn/");
 		curl_setopt($ch1, CURLOPT_HEADER, 1);
@@ -157,6 +179,7 @@ class User_model extends CI_Model {
 		$rinfo=curl_getinfo($ch1);
 		curl_close($ch1);
 
+		//get second cookie
 		$url = $rinfo['redirect_url'];
 		$ch2 = curl_init();
 		curl_setopt($ch2, CURLOPT_URL, $url);
@@ -179,7 +202,7 @@ class User_model extends CI_Model {
 		}
 		curl_close($ch2);
 
-
+		//get stuinfo
 		$url = "http://59.77.226.35/jcxx/xsxx/StudentInformation.aspx?id=".$id;
 		$ch3 = curl_init();
 		curl_setopt($ch3, CURLOPT_URL, $url);
@@ -192,7 +215,7 @@ class User_model extends CI_Model {
 		curl_close($ch3);
 		unlink($cookie_file);
 
-
+		//get Uuserid
 		$re = "/ContentPlaceHolder1_LB_xh\">(\d+)/";
 		if (preg_match($re, $content, $res))
 		{
@@ -203,6 +226,7 @@ class User_model extends CI_Model {
 			throw new Exception("用户名或密码错误");
 		}
 
+		//get Uusername
 		$re = "/ContentPlaceHolder1_LB_xm\">(\S+)<\/span>/";
 		if (preg_match($re, $content, $res))
 		{
@@ -213,6 +237,7 @@ class User_model extends CI_Model {
 			throw new Exception("用户名或密码错误");
 		}
 
+		//get Uuserphone
 		$re = "/ContentPlaceHolder1_LB_lxdh\">(\d+)/";
 		if (preg_match($re, $content, $res))
 		{
@@ -222,6 +247,8 @@ class User_model extends CI_Model {
 		{
 			throw new Exception("用户名或密码错误");
 		}
+
+		//get Uadress
 		$re = "/ContentPlaceHolder1_LB_jtdz\">(\S+)/";
 		if (preg_match($re, $content, $res))
 		{
@@ -231,30 +258,12 @@ class User_model extends CI_Model {
 		{
 			throw new Exception("用户名或密码错误");
 		}
+
 		return $data;
 	}
 	/**********************************************************************************************
 	 * 业务接口
 	 **********************************************************************************************/
-
-
-	/**
-	 * 注册
-	 */
-	public function register($form) 
-	{
-		//config
-		$members_user = array('Uusername', 'Utoken', 'Upassword');
-		$members_user_info = array('Uuserid','Uusername','Uuserphone','Uadress');
-		$data = $this->login_fzu($form);
-		//DO register
-		$form['Utoken'] = $this->create_token();
-		$this->db->insert('user', filter($form, $members_user));
-		$this->db->insert('user_info', filter($data, $members_user_info));
-		$data['Utoken'] = $form['Utoken'];
-		return $data;
-	}
-
 
 	/**
 	 * 登陆
